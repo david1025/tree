@@ -19,41 +19,45 @@ public class TreeTest {
         TreeNode node = JSONArray.parseObject(json, TreeNode.class);
         System.out.println(node);
 
-        // fastJson过滤掉parent和allChildren
-		SimplePropertyPreFilter filter = new SimplePropertyPreFilter();
-		filter.getExcludes().add("parent");
-		filter.getExcludes().add("allChildren");
-
-		long t1 = System.currentTimeMillis();
-		// 将查询回来的父子结构list构建成Tree结构
-		Tree tree = new Tree(data());
-		// 获取完成树型
-		List<TreeNode> treeNode1 = tree.getRoot();
-		long t2 = System.currentTimeMillis();
-		System.out.println("构建树形并获取根树形需要的时间：" + (t2-t1) + "ms");
+        long t1 = System.currentTimeMillis();
+        // 将查询回来的父子结构list构建成Tree结构
+        Tree tree = new Tree(data());
+        // 获取完成树型
+        List<TreeNode> treeNode1 = tree.getRoot();
+        long t2 = System.currentTimeMillis();
+        System.out.println("构建树形并获取根树形需要的时间：" + (t2 - t1) + "ms");
 
         long t3 = System.currentTimeMillis();
-		String data1 = JSONObject.toJSONString(treeNode1, filter);
+        String data1 = JSONObject.toJSONString(treeNode1);
         long t4 = System.currentTimeMillis();
-        System.out.println("fastJson过滤掉parent和allChildren需要的时间：" + (t4-t3) + "ms");
-		System.out.println(data1);
+        System.out.println("fastJson转成json需要的时间：" + (t4 - t3) + "ms");
+        System.out.println(data1);
 
-		//获取指定节点
+        //获取指定节点
         long t5 = System.currentTimeMillis();
-		TreeNode treeNode = tree.getTreeNode("11");
-		String data = JSONObject.toJSONString(treeNode, filter);
+        TreeNode treeNode = tree.getTreeNode("21");
+        String data = JSONObject.toJSONString(treeNode);
         long t6 = System.currentTimeMillis();
-        System.out.println("获取指定节点树形需要的时间：" + (t6-t5) + "ms");
-		System.out.println(data);
+        System.out.println("fastJson转成json需要的时间：" + (t6 - t5) + "ms");
+        System.out.println(data);
+
+
+        long t7 = System.currentTimeMillis();
+        // 获取完成树型
+        List<TreeNode> treeNode2 = tree.getTree();
+        String data2 = JSONObject.toJSONString(treeNode2);
+        long t8 = System.currentTimeMillis();
+        System.out.println("fastJson转成json需要的时间：" + (t8 - t7) + "ms");
+        System.out.println(data2);
     }
 
     /**
      * 模拟从数据库中查出父子结构的List
+     *
      * @return
      */
     public List<ITreeNode> data() {
         List<ITreeNode> list = new ArrayList<>();
-
 
 
         CustomerObject c1 = new CustomerObject("11", "根节点1", "0", 1, 1);

@@ -3,39 +3,62 @@ package group.ipp.tree.util;
 import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
+
 /**
+ * 构建树形建构
+ *
  * @author David
  */
 public class Tree implements ITree {
+    /**
+     * 用于存放treeNode的Map
+     */
     private LinkedHashMap<String, TreeNode> treeNodesMap = new LinkedHashMap<>();
-    private List<TreeNode> TreeNodesList = new ArrayList<>();
+    /**
+     * 用于存放treeNode的list
+     */
+    private List<TreeNode> treeNodesList = new ArrayList<>();
+
+    /**
+     * 构造方法
+     *
+     * @param list
+     */
     public Tree(List<ITreeNode> list) {
         initTreeNodeMap(list);
         initTreeNodeList();
     }
+
+    /**
+     * 将List对象数据转为TreeNodeMap
+     *
+     * @param list
+     */
     private void initTreeNodeMap(List<ITreeNode> list) {
-        TreeNode TreeNode = null;
+        TreeNode treeNode;
         for (ITreeNode item : list) {
-            TreeNode = new TreeNode(item);
-            TreeNode.setLastNodeNum(1);
-            treeNodesMap.put(TreeNode.getNodeId(), TreeNode);
+            treeNode = new TreeNode(item);
+            treeNode.setLastNodeNum(1);
+            treeNodesMap.put(treeNode.getNodeId(), treeNode);
         }
-        Iterator<TreeNode> iter = treeNodesMap.values().iterator();
+        Iterator<TreeNode> iterator = treeNodesMap.values().iterator();
         TreeNode parentTreeNode;
-        while (iter.hasNext()) {
-            TreeNode = iter.next();
-            if (StringUtils.isEmpty(TreeNode.getParentNodeId())) {
+        while (iterator.hasNext()) {
+            treeNode = iterator.next();
+            if (StringUtils.isEmpty(treeNode.getParentNodeId())) {
                 continue;
             }
-            parentTreeNode = treeNodesMap.get(TreeNode.getParentNodeId());
+            parentTreeNode = treeNodesMap.get(treeNode.getParentNodeId());
             if (parentTreeNode != null) {
-                TreeNode.setParent(parentTreeNode);
-                parentTreeNode.addChild(TreeNode);
+                treeNode.setParent(parentTreeNode);
+                parentTreeNode.addChild(treeNode);
+                // 按照orderNum排序
                 Collections.sort(parentTreeNode.getChildren(), new OrdNamComparator());
-                if(TreeNode.getChildren().size() == 0) {
-                    TreeNode.setLastNode(true);
+                // 判断这个节点是否是最子节点
+                if (treeNode.getChildren().size() == 0) {
+                    treeNode.setLastNode(true);
                 }
-                //计算每一个节点的最子节点的数量
+                // 计算每一个节点的最子节点的数量
                 List<TreeNode> children = parentTreeNode.getChildren();
                 if (children.size() > 0) {
                     int sum = 0;
@@ -47,32 +70,38 @@ public class Tree implements ITree {
             }
         }
     }
+
+    /**
+     * 根据treeNodesMap转为treeNodesList
+     */
     private void initTreeNodeList() {
-        if (TreeNodesList.size() > 0) {
+        if (treeNodesList.size() > 0) {
             return;
         }
         if (treeNodesMap.size() == 0) {
             return;
         }
-        Iterator<TreeNode> iter = treeNodesMap.values().iterator();
-        TreeNode TreeNode;
-        while (iter.hasNext()) {
-            TreeNode = iter.next();
-            if (TreeNode.getParent() == null) {
-                this.TreeNodesList.add(TreeNode);
-                this.TreeNodesList.addAll(TreeNode.getAllChildren());
+        Iterator<TreeNode> iterator = treeNodesMap.values().iterator();
+        TreeNode treeNode;
+        while (iterator.hasNext()) {
+            treeNode = iterator.next();
+            if (treeNode.getParent() == null) {
+                this.treeNodesList.add(treeNode);
+                this.treeNodesList.addAll(treeNode.getAllChildren());
             }
         }
     }
+
     @Override
     public List<TreeNode> getTree() {
-        return this.TreeNodesList;
+        return this.treeNodesList;
     }
+
     @Override
     public List<TreeNode> getRoot() {
         List<TreeNode> rootList = new ArrayList<>();
-        if (this.TreeNodesList.size() > 0) {
-            for (TreeNode node : TreeNodesList) {
+        if (this.treeNodesList.size() > 0) {
+            for (TreeNode node : treeNodesList) {
                 if (node.getParent() == null) {
                     rootList.add(node);
                     Collections.sort(rootList, new OrdNamComparator());
@@ -81,6 +110,7 @@ public class Tree implements ITree {
         }
         return rootList;
     }
+
     @Override
     public TreeNode getTreeNode(String nodeId) {
         return this.treeNodesMap.get(nodeId);

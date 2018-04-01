@@ -1,92 +1,91 @@
 package group.ipp.tree.util;
 
 public class CustomerObject implements ITreeNode {
-	
-	private String id;
-	
-	private String name;
-	
-	private String parentId;
-	
-	private Integer orderNum;
-	
-	private Integer level;
-	
-	public CustomerObject() {
-		
-	}
-	
-	public CustomerObject(String id, String name, String parentId, int orderNum, int level) {
-		this.id = id;
-		this.name = name;
-		this.parentId = parentId;
-		this.orderNum = orderNum;
-		this.level = level;
-	}
 
-	@Override
-	public String getNodeId() {
-		
-		return this.id;
-	}
+    private String id;
 
-	@Override
-	public String getNodeName() {
-		return this.name;
-	}
+    private String name;
 
-	@Override
-	public String getNodeParentId() {
-		
-		return this.parentId;
-	}
+    private String parentId;
 
-	@Override
-	public Integer getOrderNum() {
-		return this.orderNum;
-	}
+    private Integer orderNum;
 
-	@Override
-	public Integer getNodeLevel() {
-		return this.level;
-	}
+    private Integer level;
 
-	public String getId() {
-		return id;
-	}
+    public CustomerObject() {
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    }
 
-	public String getName() {
-		return name;
-	}
+    public CustomerObject(String id, String name, String parentId, int orderNum, int level) {
+        this.id = id;
+        this.name = name;
+        this.parentId = parentId;
+        this.orderNum = orderNum;
+        this.level = level;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public String getNodeId() {
 
-	public String getParentId() {
-		return parentId;
-	}
+        return this.id;
+    }
 
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
+    @Override
+    public String getNodeName() {
+        return this.name;
+    }
 
-	public void setOrderNum(Integer orderNum) {
-		this.orderNum = orderNum;
-	}
+    @Override
+    public String getNodeParentId() {
 
-	public Integer getLevel() {
-		return level;
-	}
+        return this.parentId;
+    }
 
-	public void setLevel(Integer level) {
-		this.level = level;
-	}
-	
-	
+    @Override
+    public Integer getOrderNum() {
+        return this.orderNum;
+    }
+
+    @Override
+    public Integer getNodeLevel() {
+        return this.level;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
 
 }
