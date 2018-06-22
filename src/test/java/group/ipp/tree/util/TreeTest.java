@@ -6,6 +6,7 @@ import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,6 +27,27 @@ public class TreeTest {
         List<TreeNode> treeNode1 = tree.getRoot();
         long t2 = System.currentTimeMillis();
         System.out.println("构建树形并获取根树形需要的时间：" + (t2 - t1) + "ms");
+        TreeNode tn = treeNode1.get(0);
+        List<TreeNode> lastTreeNodeList = new ArrayList<>();
+        findLastChildList(tn, lastTreeNodeList);
+
+        List<String> treeNodeHoleNames;
+        for (TreeNode t : lastTreeNodeList) {
+            System.out.println(t.getNodeName());
+            treeNodeHoleNames = new ArrayList<>();
+            findParents(t, treeNodeHoleNames);
+            // 反转lists
+            Collections.reverse(treeNodeHoleNames);
+            String holeName = "";
+            for(String name : treeNodeHoleNames) {
+                holeName += name + " > ";
+            }
+            if(holeName.length() > 0) {
+                holeName = holeName.substring(0, holeName.length() - 2);
+            }
+            t.setCompleteName(holeName);
+            System.out.println(holeName);
+        }
 
         long t3 = System.currentTimeMillis();
         String data1 = JSONObject.toJSONString(treeNode1);
@@ -49,6 +71,23 @@ public class TreeTest {
         long t8 = System.currentTimeMillis();
         System.out.println("fastJson转成json需要的时间：" + (t8 - t7) + "ms");
         System.out.println(data2);
+    }
+
+    private void findLastChildList(TreeNode treeNode, List<TreeNode> treeNodeList) {
+        if(!treeNode.isLastNode()) {
+            for(TreeNode tn : treeNode.getChildren()) {
+                findLastChildList(tn, treeNodeList);
+            }
+        } else {
+            treeNodeList.add(treeNode);
+        }
+    }
+
+    private void findParents(TreeNode treeNode, List<String> parentNames) {
+        parentNames.add(treeNode.getNodeName());
+        if(treeNode.getParent() != null) {
+            findParents(treeNode.getParent(), parentNames);
+        }
     }
 
     /**

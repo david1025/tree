@@ -54,6 +54,12 @@ public class TreeNode {
     private List<TreeNode> children = new ArrayList<>();
 
     /**
+     * 当前节点的完整路径
+     */
+    @JSONField(ordinal = 9)
+    private String completeName;
+
+    /**
      * 当前节点的父级节点
      * 转json的时候忽略此属性，因为此属性到前端无作用
      */
@@ -172,5 +178,13 @@ public class TreeNode {
             }
         }
         return this.allChildren;
+    }
+
+    public String getCompleteName() {
+        return completeName;
+    }
+
+    public void setCompleteName(String completeName) {
+        this.completeName = completeName;
     }
 }
