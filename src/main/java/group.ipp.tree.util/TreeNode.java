@@ -47,6 +47,8 @@ public class TreeNode {
     @JSONField(ordinal = 7)
     private boolean lastNode;
 
+    private Object data;
+
     /**
      * 当前节点的儿子节点
      */
@@ -72,14 +74,6 @@ public class TreeNode {
      */
     @JSONField(serialize = false)
     private List<TreeNode> allChildren = new ArrayList<>();
-
-    public TreeNode(ITreeNode obj) {
-        this.nodeId = obj.getNodeId();
-        this.nodeName = obj.getNodeName();
-        this.parentNodeId = obj.getNodeParentId();
-        this.orderNum = obj.getOrderNum();
-        this.level = obj.getNodeLevel();
-    }
 
     public TreeNode(TreeNode obj) {
         this.orderNum = obj.getOrderNum();
@@ -186,5 +180,13 @@ public class TreeNode {
 
     public void setCompleteName(String completeName) {
         this.completeName = completeName;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }

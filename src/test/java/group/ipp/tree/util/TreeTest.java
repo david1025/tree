@@ -2,9 +2,10 @@ package group.ipp.tree.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
+import group.ipp.tree.util.annotation.TreeNodeId;
 import org.junit.Test;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +14,37 @@ import java.util.List;
  * tree工具类单元测试类
  */
 public class TreeTest {
+
+    @Test
+    public void test() {
+        CustomerObject1 c1 = new CustomerObject1("11", "根节点1", "0", 1, 1);
+        // 此处要用反射将字段中的注解解析出来
+
+        declarted(c1);
+
+
+
+    }
+    private void declarted(Object obj) {
+        Class clz = obj.getClass();
+        // 解析字段上是否有注解
+        // ps：getDeclaredFields会返回类所有声明的字段，包括private、protected、public，但是不包括父类的
+        // getFields:则会返回包括父类的所有的public字段，和getMethods()一样
+        Field[] fields = clz.getDeclaredFields();
+        for(Field field : fields){
+            boolean fieldHasAnno = field.isAnnotationPresent(TreeNodeId.class);
+            if(fieldHasAnno){
+                TreeNodeId fieldAnno = field.getAnnotation(TreeNodeId.class);
+                System.out.println(field.getName());
+                field.setAccessible(true);
+                try {
+                    System.out.println(field.get(obj));
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     @Test
     public void treeTest1() {
@@ -95,30 +127,30 @@ public class TreeTest {
      *
      * @return
      */
-    public List<ITreeNode> data() {
-        List<ITreeNode> list = new ArrayList<>();
+    public List<CustomerObject1> data() {
+        List<CustomerObject1> list = new ArrayList<>();
 
 
-        CustomerObject c1 = new CustomerObject("11", "根节点1", "0", 1, 1);
+        CustomerObject1 c1 = new CustomerObject1("11", "根节点1", "0", 1, 1);
 
 
-        CustomerObject c3 = new CustomerObject("21", "一级节点1", "11", 3, 2);
+        CustomerObject1 c3 = new CustomerObject1("21", "一级节点1", "11", 3, 2);
 
-        CustomerObject c4 = new CustomerObject("22", "一级节点2", "11", 4, 2);
+        CustomerObject1 c4 = new CustomerObject1("22", "一级节点2", "11", 4, 2);
 
-        CustomerObject c5 = new CustomerObject("23", "一级节点3", "11", 5, 2);
+        CustomerObject1 c5 = new CustomerObject1("23", "一级节点3", "11", 5, 2);
 
-        CustomerObject c7 = new CustomerObject("31", "二级节点1", "21", 7, 3);
+        CustomerObject1 c7 = new CustomerObject1("31", "二级节点1", "21", 7, 3);
 
-        CustomerObject c8 = new CustomerObject("32", "二级节点2", "21", 8, 3);
+        CustomerObject1 c8 = new CustomerObject1("32", "二级节点2", "21", 8, 3);
 
-        CustomerObject c9 = new CustomerObject("33", "二级节点3", "23", 9, 3);
+        CustomerObject1 c9 = new CustomerObject1("33", "二级节点3", "23", 9, 3);
 
-        CustomerObject c10 = new CustomerObject("34", "二级节点4", "23", 10, 3);
+        CustomerObject1 c10 = new CustomerObject1("34", "二级节点4", "23", 10, 3);
 
-        CustomerObject c13 = new CustomerObject("41", "三级节点1", "31", 13, 4);
+        CustomerObject1 c13 = new CustomerObject1("41", "三级节点1", "31", 13, 4);
 
-        CustomerObject c14 = new CustomerObject("42", "三级节点2", "31", 14, 4);
+        CustomerObject1 c14 = new CustomerObject1("42", "三级节点2", "31", 14, 4);
         list.add(c14);
         list.add(c13);
         list.add(c10);

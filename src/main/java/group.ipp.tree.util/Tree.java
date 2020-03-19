@@ -1,7 +1,17 @@
 package group.ipp.tree.util;
 
-import java.util.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 
+import group.ipp.tree.util.annotation.TreeNodeId;
+import group.ipp.tree.util.annotation.TreeNodeLevel;
+import group.ipp.tree.util.annotation.TreeNodeName;
+import group.ipp.tree.util.annotation.TreeNodeOrder;
+import group.ipp.tree.util.annotation.TreeNodeParentId;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -9,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author David
  */
-public class Tree implements ITree {
+public class Tree<T> {
     /**
      * 用于存放treeNode的Map
      */
@@ -24,7 +34,7 @@ public class Tree implements ITree {
      *
      * @param list
      */
-    public Tree(List<ITreeNode> list) {
+    public Tree(List<T> list) {
         initTreeNodeMap(list);
         initTreeNodeList();
     }
@@ -34,11 +44,25 @@ public class Tree implements ITree {
      *
      * @param list
      */
-    private void initTreeNodeMap(List<ITreeNode> list) {
+    private void initTreeNodeMap(List<T> list) {
         TreeNode treeNode;
-        for (ITreeNode item : list) {
-            treeNode = new TreeNode(item);
+        for (Object item : list) {
+            treeNode = new TreeNode();
+            treeNode.setNodeId(getFieldValue(item, "TreeNodeId"));
+            treeNode.setNodeName(getFieldValue(item, "TreeNodeName"));
+            treeNode.setParentNodeId(getFieldValue(item, "TreeNodeParentId"));
+            if(StringUtils.isEmpty(getFieldValue(item, "TreeNodeLevel"))) {
+                treeNode.setLevel(0);
+            } else {
+                treeNode.setLevel(Integer.parseInt(getFieldValue(item, "TreeNodeLevel")));
+            }
+            if(StringUtils.isEmpty(getFieldValue(item, "TreeNodeOrder"))) {
+                treeNode.setOrderNum(0);
+            } else {
+                treeNode.setOrderNum(Integer.parseInt(getFieldValue(item, "TreeNodeOrder")));
+            }
             treeNode.setLastNodeNum(1);
+            treeNode.setData(item);
             treeNodesMap.put(treeNode.getNodeId(), treeNode);
         }
         Iterator<TreeNode> iterator = treeNodesMap.values().iterator();
@@ -71,6 +95,49 @@ public class Tree implements ITree {
         }
     }
 
+    private String getFieldValue(Object obj, String type) {
+        Class clz = obj.getClass();
+        Field[] fields = clz.getDeclaredFields();
+        String value = null;
+        try {
+            for(Field field : fields){
+                field.setAccessible(true);
+                switch (type){
+                    case "TreeNodeId":
+                        if(field.isAnnotationPresent(TreeNodeId.class)) {
+                            value = String.valueOf(field.get(obj));
+                        }
+                        break;
+                    case "TreeNodeParentId":
+                        if(field.isAnnotationPresent(TreeNodeParentId.class)) {
+                            value = String.valueOf(field.get(obj));
+                        }
+                        break;
+                    case "TreeNodeName":
+                        if(field.isAnnotationPresent(TreeNodeName.class)) {
+                            value = String.valueOf(field.get(obj));
+                        }
+                        break;
+                    case "TreeNodeOrder":
+                        if(field.isAnnotationPresent(TreeNodeOrder.class)) {
+                            value = String.valueOf(field.get(obj));
+                        }
+                        break;
+                    case "TreeNodeLevel":
+                        if(field.isAnnotationPresent(TreeNodeLevel.class)) {
+                            value = String.valueOf(field.get(obj));
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } catch (IllegalAccessException e) {
+                e.printStackTrace();
+        }
+        return value;
+    }
+
     /**
      * 根据treeNodesMap转为treeNodesList
      */
@@ -92,12 +159,10 @@ public class Tree implements ITree {
         }
     }
 
-    @Override
     public List<TreeNode> getTree() {
         return this.treeNodesList;
     }
 
-    @Override
     public List<TreeNode> getRoot() {
         List<TreeNode> rootList = new ArrayList<>();
         if (this.treeNodesList.size() > 0) {
@@ -111,24 +176,7 @@ public class Tree implements ITree {
         return rootList;
     }
 
-    @Override
     public TreeNode getTreeNode(String nodeId) {
         return this.treeNodesMap.get(nodeId);
-    }
-}
-
-/**
- * 自定义排序，按照orderNum排序
- */
-class OrdNamComparator implements Comparator<TreeNode> {
-    @Override
-    public int compare(TreeNode t1, TreeNode t2) {
-        if (t1.getOrderNum() > t2.getOrderNum()) {
-            return 1;
-        }
-        if (t1.getOrderNum() < t2.getOrderNum()) {
-            return -1;
-        }
-        return t1.getNodeName().compareTo(t2.getNodeName());
     }
 }

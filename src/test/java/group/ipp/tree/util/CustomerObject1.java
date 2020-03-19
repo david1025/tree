@@ -1,22 +1,33 @@
 package group.ipp.tree.util;
 
-public class CustomerObject implements ITreeNode {
+import group.ipp.tree.util.annotation.*;
 
+public class CustomerObject1 {
+
+    @TreeNodeId
     private String id;
 
+    @TreeNodeName
     private String name;
 
+    @TreeNodeParentId
     private String parentId;
 
+    @TreeNodeOrder
     private Integer orderNum;
 
+    @TreeNodeLevel
     private Integer level;
 
-    public CustomerObject() {
+    private String test1;
+
+    private String test2;
+
+    public CustomerObject1() {
 
     }
 
-    public CustomerObject(String id, String name, String parentId, int orderNum, int level) {
+    public CustomerObject1(String id, String name, String parentId, int orderNum, int level) {
         this.id = id;
         this.name = name;
         this.parentId = parentId;
@@ -24,32 +35,6 @@ public class CustomerObject implements ITreeNode {
         this.level = level;
     }
 
-    @Override
-    public String getNodeId() {
-
-        return this.id;
-    }
-
-    @Override
-    public String getNodeName() {
-        return this.name;
-    }
-
-    @Override
-    public String getNodeParentId() {
-
-        return this.parentId;
-    }
-
-    @Override
-    public Integer getOrderNum() {
-        return this.orderNum;
-    }
-
-    @Override
-    public Integer getNodeLevel() {
-        return this.level;
-    }
 
     public String getId() {
         return id;
@@ -87,5 +72,19 @@ public class CustomerObject implements ITreeNode {
         this.level = level;
     }
 
+    public String getTest1() {
+        return test1;
+    }
 
+    public void setTest1(String test1) {
+        this.test1 = test1;
+    }
+
+    public String getTest2() {
+        return test2;
+    }
+
+    public void setTest2(String test2) {
+        this.test2 = test2;
+    }
 }
